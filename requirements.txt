@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+jinja2
+itsdangerous
+psycopg2-binary
+python-dotenv
+rapidfuzz
+werkzeug
+openpyxl

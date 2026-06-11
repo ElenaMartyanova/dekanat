@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.results }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+<header class="header">
+    <div>
+        <h1>{{ texts.results }}</h1>
+        <p>{{ query }}</p>
+    </div>
+    <div class="language-switcher">
+        {% for code, label in languages.items() %}
+            <a href="/?lang={{ code }}" class="{% if code == lang %}active{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+</header>
+<main class="container">
+    {% if language_error %}
+    <section class="message-card error-message">
+        <h2>
+            {% if lang == "ru" %}
+                Ошибка языка
+            {% elif lang == "en" %}
+                Language error
+            {% else %}
+                语言错误
+            {% endif %}
+        </h2>
+
+        <p>{{ language_error.main }}</p>
+
+        {% for message in language_error.small %}
+            <p class="language-error-small">{{ message }}</p>
+        {% endfor %}
+    </section>
+    {% endif %}
+    <div class="top-actions">
+        <a class="back-button" href="/?lang={{ lang }}">{{ texts.back }}</a>
+        {% if not saved %}
+            <form action="/save-unanswered" method="post" class="not-answer-form top-not-answer">
+                <input type="hidden" name="lang" value="{{ lang }}">
+                <input type="hidden" name="query" value="{{ query }}">
+                <button type="submit" class="not-answer-button">{{ texts.not_my_answer }}</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="results-layout">
+        <div class="results-content">
+            {% if saved %}
+                <section class="message-card">
+                    <h2>{{ texts.query_saved }}</h2>
+                    <p>{{ texts.contact_dean }}</p>
+                </section>
+            {% endif %}
+
+            {% if main_result %}
+                <section class="main-answer">
+                    <h2>{{ texts.main_answer }}</h2>
+                    <article class="result-card main-result-card">
+                        <h2>{{ main_result.question_text }}</h2>
+                        <p>{{ main_result.answer_text }}</p>
+                    </article>
+                </section>
+
+                <form action="/search" method="post" class="search-form compact-search">
+                    <input type="hidden" name="lang" value="{{ lang }}">
+                    <select name="search_filter" class="search-filter">
+                        {% for filter in search_filters %}
+                            <option value="{{ filter.code }}" {% if filter.code == selected_filter %}selected{% endif %}>{{ filter.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="query" value="{{ query }}" placeholder="{{ texts.search_placeholder }}">
+                    <button type="submit">{{ texts.search_button }}</button>
+                </form>
+
+                {% if similar_results %}
+                    <section class="similar-section">
+                        <h2>{{ texts.similar_questions }}</h2>
+                        <div class="result-list">
+                            {% for item in similar_results %}
+                                <article class="result-card">
+                                    <h2>{{ item.question_text }}</h2>
+                                    <p>{{ item.answer_text }}</p>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+            {% else %}
+                {% if not language_error %}
+                    <section class="message-card">
+                        <h2>{{ texts.no_answer }}</h2>
+                        <p>{{ texts.contact_dean }}</p>
+                        <h3>{{ texts.similar }}</h3>
+                        <div class="category-grid">
+                            {% for category in categories %}
+                                <a class="category-card" href="/category/{{ category.id }}?lang={{ lang }}">{{ category.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <aside class="feedback-panel">
+            <h2>{{ texts.feedback_title }}</h2>
+            {% if feedback_saved %}<div class="feedback-success">{{ texts.feedback_saved }}</div>{% endif %}
+            <form action="/feedback" method="post" class="feedback-form">
+                <input type="hidden" name="lang" value="{{ lang }}">
+                <input type="hidden" name="query" value="{{ query }}">
+                <label>{{ texts.feedback_rating }}</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                </div>
+                <textarea name="feedback_text" placeholder="{{ texts.feedback_placeholder }}"></textarea>
+                <button type="submit">{{ texts.feedback_send }}</button>
+            </form>
+        </aside>
+    </div>
+</main>
+</body>
+</html>

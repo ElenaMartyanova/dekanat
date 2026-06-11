@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.title }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="header">
+    <div>
+        <h1>{{ texts.title }}</h1>
+        <p>{{ texts.subtitle }}</p>
+    </div>
+    <div class="language-switcher">
+        {% for code, label in languages.items() %}
+            <a href="/?lang={{ code }}" class="{% if code == lang %}active{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+</header>
+<main class="container">
+    <section class="search-section">
+        <span class="service-label">{{ texts.service_label }}</span>
+        <form action="/search" method="post" class="search-form">
+            <input type="hidden" name="lang" value="{{ lang }}">
+            <select name="search_filter" class="search-filter">
+                {% for filter in search_filters %}
+                    <option value="{{ filter.code }}">{{ filter.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="query" placeholder="{{ texts.search_placeholder }}">
+            <button type="submit">{{ texts.search_button }}</button>
+        </form>
+    </section>
+    <section class="categories-section">
+        <h2>{{ texts.categories }}</h2>
+
+        {% for group in category_groups %}
+            <h3 class="category-group-title">{{ group.title }}</h3>
+
+            <div class="category-grid">
+                {% for category in group.categories %}
+                <a href="/category/{{ category.id }}?lang={{ lang }}" class="category-card {% if category.is_foreign %}foreign-category{% endif %}">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        {% endfor %} 
+        </div>
+    </section>
+    <section class="admin-link">
+        <a href="/admin/login?lang={{ lang }}">{{ texts.admin_login }}</a>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ texts.admin_login }}</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<header class="header"><div><h1>{{ texts.admin_login }}</h1><p>{{ texts.admin_panel }}</p></div></header>
+<main class="container narrow">
+    {% if error %}<div class="message-card error">{{ error }}</div>{% endif %}
+    <form action="/admin/login" method="post" class="knowledge-form">
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <label>{{ texts.username }}</label><input type="text" name="username" required>
+        <label>{{ texts.password }}</label><input type="password" name="password" required>
+        <button type="submit">{{ texts.login }}</button>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category_name }}</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<header class="header"><div><h1>{{ category_name }}</h1><p>{{ texts.service_label }}</p></div></header>
+<main class="container">
+    <div class="top-actions"><a class="back-button" href="/?lang={{ lang }}">{{ texts.back }}</a></div>
+    <div class="accordion-list">
+        {% for item in records %}
+            <details class="result-card accordion-card">
+                <summary>{{ item.question_text }}</summary>
+                <p>{{ item.answer_text }}</p>
+            </details>
+        {% else %}
+            <section class="message-card"><h2>{{ texts.no_answer }}</h2></section>
+        {% endfor %}
+    </div>
+</main>
+</body>
+</html>

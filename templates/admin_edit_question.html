@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование вопроса</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div>
+        <h1>Редактирование вопроса</h1>
+        <p>Изменение вопроса и ответа на русском, английском и китайском языках</p>
+    </div>
+</header>
+
+<main class="container">
+
+    {% include "admin_nav.html" %}
+
+    {% if error %}
+        <section class="message-card error-message">
+            <h2>Ошибка заполнения</h2>
+            <p>{{ error }}</p>
+        </section>
+    {% endif %}
+
+    <section class="admin-section">
+        <h2>Вопрос ID {{ question.id }}</h2>
+
+        <form action="/admin/knowledge/edit/{{ question.id }}?lang={{ lang }}" method="post" class="knowledge-form">
+            <label>Категория</label>
+
+            <select name="category_id" required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == question.category_id %}selected{% endif %}>
+                        {{ category_names.get(category.code, category.code) }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <h3>Русский</h3>
+            <input type="text" name="question_ru" value="{{ translations.ru.question }}" placeholder="Вопрос RU" required>
+            <textarea name="answer_ru" placeholder="Ответ RU" required>{{ translations.ru.answer }}</textarea>
+
+            <h3>English</h3>
+            <input type="text" name="question_en" value="{{ translations.en.question }}" placeholder="Question EN" required>
+            <textarea name="answer_en" placeholder="Answer EN" required>{{ translations.en.answer }}</textarea>
+
+            <h3>中文</h3>
+            <input type="text" name="question_zh" value="{{ translations.zh.question }}" placeholder="问题中文" required>
+            <textarea name="answer_zh" placeholder="答案中文" required>{{ translations.zh.answer }}</textarea>
+
+            <div class="admin-actions-row">
+                <button type="submit">Сохранить изменения</button>
+
+                <a href="/admin/knowledge?lang={{ lang }}" class="admin-cancel-button">
+                    Отмена
+                </a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+</body>
+</html>

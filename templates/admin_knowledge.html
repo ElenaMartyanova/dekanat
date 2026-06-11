@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="{{ lang }}"
+><head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База вопросов и ответов</title><link rel="stylesheet" href="/static/style.css"></head><body>
+<header class="header"><div><h1>База вопросов и ответов</h1><p>Управление вопросами, ответами и переводами</p></div></header>
+<main class="container">
+    {% include "admin_nav.html" %}
+    {% if error %}
+    <section class="message-card error-message">
+        <h2>Ошибка заполнения</h2>
+        <p>{{ error }}</p>
+    </section>
+    {% endif %}
+<section class="admin-section"><h2>Фильтр вопросов</h2><form action="/admin/knowledge" method="get" class="admin-filter-form"><input type="hidden" name="lang" value="{{ lang }}"><select name="category"><option value="all" {% if selected_category == 'all' %}selected{% endif %}>Все категории</option>{% for category in categories %}<option value="{{ category.code }}" {% if selected_category == category.code %}selected{% endif %}>{{ category_names.get(category.code, category.code) }}</option>{% endfor %}</select><input type="text" name="q" value="{{ search_query }}" placeholder="Поиск по вопросу"><button type="submit">Показать</button><a href="/admin/knowledge?lang={{ lang }}" class="admin-cancel-button">Сбросить</a></form><p class="admin-count">Найдено вопросов: <strong>{{ total_questions }}</strong></p></section>
+<section class="admin-section"><h2>Список вопросов</h2><table class="admin-table"><thead><tr><th>ID</th><th>Категория</th><th>Вопрос</th><th>Действия</th></tr></thead><tbody>{% for item in questions %}<tr><td>{{ item.id }}</td><td>{{ category_names.get(item.category_code, item.category_code) }}</td><td class="question-cell">{{ item.question_text }}</td><td class="admin-actions"><a class="admin-edit-button" href="/admin/knowledge/edit/{{ item.id }}?lang={{ lang }}">Редактировать</a><form action="/admin/knowledge/delete/{{ item.id }}?lang={{ lang }}" method="post" onsubmit="return confirm('Удалить этот вопрос?');"><button class="admin-danger-button">Удалить</button></form></td></tr>{% else %}<tr><td colspan="4">Вопросы не найдены.</td></tr>{% endfor %}</tbody></table>{% if total_pages > 1 %}<div class="pagination">{% if page > 1 %}<a href="/admin/knowledge?lang={{ lang }}&category={{ selected_category }}&q={{ search_query }}&page={{ page-1 }}">← Назад</a>{% endif %}<span>Страница {{ page }} из {{ total_pages }}</span>{% if page < total_pages %}<a href="/admin/knowledge?lang={{ lang }}&category={{ selected_category }}&q={{ search_query }}&page={{ page+1 }}">Вперёд →</a>{% endif %}</div>{% endif %}</section>
+<section class="admin-section">
+    <h2>Добавить новый вопрос</h2>
+
+    <form action="/admin/knowledge/add?lang={{ lang }}" method="post" class="knowledge-form">
+        <label>Категория</label>
+
+        <select name="category_id" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}">
+                    {{ category_names.get(category.code, category.code) }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <h3>Русский</h3>
+        <input type="text" name="question_ru" placeholder="Вопрос RU" required>
+        <textarea name="answer_ru" placeholder="Ответ RU" required></textarea>
+
+        <h3>English</h3>
+        <input type="text" name="question_en" placeholder="Question EN" required>
+        <textarea name="answer_en" placeholder="Answer EN" required></textarea>
+
+        <h3>中文</h3>
+        <input type="text" name="question_zh" placeholder="问题中文" required>
+        <textarea name="answer_zh" placeholder="答案中文" required></textarea>
+
+        <button type="submit">Добавить вопрос</button>
+    </form>
+</section>
+</main></body></html>

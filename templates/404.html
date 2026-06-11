@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if lang == "ru" %}
+            Страница не найдена
+        {% elif lang == "en" %}
+            Page not found
+        {% else %}
+            页面未找到
+        {% endif %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+
+    <style>
+        .error-page-card {
+            max-width: 620px;
+            margin: 40px auto;
+            padding: 30px 24px;
+            background: white;
+            border: 1px solid #e2dff0;
+            border-radius: 18px;
+            box-shadow: 0 8px 18px rgba(55, 37, 121, .08);
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 54px;
+            font-weight: 900;
+            color: #372579;
+            margin: 0 0 8px;
+        }
+
+        .error-page-card h2 {
+            color: #372579;
+            margin: 12px 0 10px;
+        }
+
+        .error-page-card p {
+            font-size: 17px;
+            margin-bottom: 22px;
+        }
+
+        .minion-face {
+            width: 160px;
+            height: 210px;
+            margin: 0 auto 22px;
+            background: #ffd84d;
+            border: 4px solid #2f2f2f;
+            border-radius: 78px 78px 58px 58px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .minion-hair {
+            width: 4px;
+            height: 22px;
+            background: #2f2f2f;
+            position: absolute;
+            top: -22px;
+            left: 78px;
+            border-radius: 4px;
+            transform-origin: bottom center;
+        }
+
+        .hair-1 {
+            transform: rotate(-25deg);
+            left: 62px;
+        }
+
+        .hair-2 {
+            transform: rotate(0deg);
+            left: 78px;
+        }
+
+        .hair-3 {
+            transform: rotate(25deg);
+            left: 94px;
+        }
+
+        .minion-strap {
+            position: absolute;
+            top: 58px;
+            left: -4px;
+            width: 160px;
+            height: 18px;
+            background: #2f2f2f;
+            z-index: 1;
+        }
+
+        .minion-goggles {
+            position: absolute;
+            top: 42px;
+            left: 12px;
+            display: flex;
+            gap: 2px;
+            z-index: 2;
+        }
+
+        .minion-eye {
+            width: 62px;
+            height: 62px;
+            background: white;
+            border: 7px solid #777;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 0 0 2px #d9d9d9;
+        }
+
+        .minion-eye::after {
+            content: "";
+            width: 17px;
+            height: 17px;
+            background: #2f2f2f;
+            border-radius: 50%;
+            position: absolute;
+            top: 22px;
+            left: 22px;
+        }
+
+        .minion-mouth {
+            width: 46px;
+            height: 8px;
+            border-bottom: 5px solid #2f2f2f;
+            border-radius: 0 0 50px 50px;
+            position: absolute;
+            top: 130px;
+            left: 55px;
+            z-index: 3;
+        }
+
+        .minion-overall {
+            position: absolute;
+            bottom: -4px;
+            left: -4px;
+            width: 160px;
+            height: 58px;
+            background: #4b8bd6;
+            border: 4px solid #2f2f2f;
+            border-radius: 0 0 54px 54px;
+            z-index: 2;
+        }
+
+        .overall-pocket {
+            width: 42px;
+            height: 28px;
+            background: #3778c2;
+            border: 3px solid #2f2f2f;
+            border-radius: 0 0 12px 12px;
+            position: absolute;
+            top: 12px;
+            left: 55px;
+        }
+
+        @media (max-width: 480px) {
+            .error-page-card {
+                margin: 22px auto;
+                padding: 24px 16px;
+            }
+
+            .error-code {
+                font-size: 46px;
+            }
+
+            .minion-face {
+                transform: scale(.85);
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div>
+        <h1>
+            {% if lang == "ru" %}
+                Страница не найдена
+            {% elif lang == "en" %}
+                Page not found
+            {% else %}
+                页面未找到
+            {% endif %}
+        </h1>
+        <p>
+            {% if lang == "ru" %}
+                Запрошенный адрес не существует
+            {% elif lang == "en" %}
+                The requested address does not exist
+            {% else %}
+                请求的地址不存在
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="language-switcher">
+        {% for code, label in languages.items() %}
+            <a href="/?lang={{ code }}" class="{% if code == lang %}active{% endif %}">
+                {{ label }}
+            </a>
+        {% endfor %}
+    </div>
+</header>
+
+<main class="container">
+    <section class="error-page-card">
+        <div class="minion-face">
+            <div class="minion-hair hair-1"></div>
+            <div class="minion-hair hair-2"></div>
+            <div class="minion-hair hair-3"></div>
+
+            <div class="minion-strap"></div>
+
+            <div class="minion-goggles">
+                <div class="minion-eye"></div>
+                <div class="minion-eye"></div>
+            </div>
+
+            <div class="minion-mouth"></div>
+
+            <div class="minion-overall">
+                <div class="overall-pocket"></div>
+            </div>
+        </div>
+
+        <div class="error-code">404</div>
+
+        <h2>
+            {% if lang == "ru" %}
+                Кажется, такой страницы нет
+            {% elif lang == "en" %}
+                It looks like this page does not exist
+            {% else %}
+                看起来这个页面不存在
+            {% endif %}
+        </h2>
+
+        <p>
+            {% if lang == "ru" %}
+                Проверьте адрес или вернитесь на главную страницу.
+            {% elif lang == "en" %}
+                Please check the address or return to the main page.
+            {% else %}
+                请检查地址，或返回主页。
+            {% endif %}
+        </p>
+
+        <a href="/?lang={{ lang }}" class="back-button empty-query-button">
+            {% if lang == "ru" %}
+                Вернуться на главную
+            {% elif lang == "en" %}
+                Back to main page
+            {% else %}
+                返回主页
+            {% endif %}
+        </a>
+    </section>
+</main>
+
+</body>
+</html>
